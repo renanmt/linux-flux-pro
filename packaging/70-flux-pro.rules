@@ -1,0 +1,2 @@
+# Dedicated service group; never grant every user raw-device access.
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="2022", ATTRS{idProduct}=="0522", GROUP="flux-display", MODE="0660"

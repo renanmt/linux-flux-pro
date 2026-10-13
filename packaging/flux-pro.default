@@ -1,0 +1,5 @@
+# Run `flux-pro --list` to find selectors.
+CPU_SENSOR=auto
+# Select exactly one NVIDIA GPU; use an explicit selector for multiple GPUs or AMD.
+GPU_SENSOR=nvidia:auto
+INTERVAL=1

@@ -1,0 +1,28 @@
+[Unit]
+Description=Antec Flux Pro CPU and GPU temperature display
+After=systemd-udevd.service
+
+[Service]
+Type=simple
+User=flux-display
+Group=flux-display
+SupplementaryGroups=video render
+Environment=CPU_SENSOR=auto
+Environment=GPU_SENSOR=nvidia:auto
+Environment=INTERVAL=1
+EnvironmentFile=-/etc/default/flux-pro
+ExecStart=/usr/local/bin/flux-pro --cpu ${CPU_SENSOR} --gpu ${GPU_SENSOR} --interval ${INTERVAL}
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

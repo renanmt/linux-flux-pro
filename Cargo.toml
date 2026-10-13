@@ -1,0 +1,23 @@
+[package]
+name = "flux-pro"
+version = "0.1.0"
+edition = "2024"
+description = "Linux temperature display daemon for the Antec Flux Pro"
+license = "MIT"
+repository = "https://github.com/renanmt/linux-flux-pro"
+readme = "README.md"
+keywords = ["antec", "hid", "temperature", "linux", "nvml"]
+categories = ["hardware-support", "command-line-utilities"]
+
+[dependencies]
+libc = "0.2"
+nvml-wrapper = "0.13"
+signal-hook = "0.4"
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

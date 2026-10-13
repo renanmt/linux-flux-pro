@@ -1,0 +1,38 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install stable Rust
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+          rustup default stable
+      - name: Validate
+        run: |
+          cargo fmt --check
+          cargo test --locked
+          cargo clippy --all-targets --locked -- -D warnings
+          cargo build --release --locked
+          bash -n install.sh uninstall.sh
+          shellcheck install.sh uninstall.sh
+      - name: Check packaged installation
+        run: |
+          python3 scripts/package-release.py
+          cd dist
+          sha256sum --check SHA256SUMS
+          mkdir unpacked
+          tar -xzf ./*.tar.gz -C unpacked
+          cd unpacked/flux-pro-*
+          ./flux-pro --version
+          ./install.sh --destdir "$RUNNER_TEMP/flux-pro-stage"
+          cmp flux-pro "$RUNNER_TEMP/flux-pro-stage/usr/local/bin/flux-pro"
+          printf '%s\n' 'INTERVAL=2' > "$RUNNER_TEMP/flux-pro-stage/etc/default/flux-pro"
+          ./install.sh --destdir "$RUNNER_TEMP/flux-pro-stage"
+          test "$(cat "$RUNNER_TEMP/flux-pro-stage/etc/default/flux-pro")" = 'INTERVAL=2'
