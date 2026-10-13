@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Review first. This installs files but never starts or enables the service.
 set -euo pipefail
-source_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+source_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
 case "${1:-}" in
   --destdir)
     [[ $# == 2 && "$2" == /* && "$2" != / ]] || { echo 'Usage: ./install.sh --destdir /absolute/staging/directory' >&2; exit 2; }
